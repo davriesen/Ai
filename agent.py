@@ -10,16 +10,24 @@
 
 import sys
 import socket
-
+from pprint import pprint
+from GameNodeState import  GameNodeState
 # declaring visible grid to agent
 view = [['' for _ in range(5)] for _ in range(5)]
 pq = []
+game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+
+def update_game_state(action):
+    if action == 'f':
+        game_state.move_forward()
+    elif action == 'r':
+        game_state.change_dir('r')
+    elif action == 'l':
+        game_state.change_dir('l')
 # function to take get action from AI or user
 def get_action(view):
 
-    # REPLACE THIS WITH AI CODE TO CHOOSE ACTION ##
-    # return heappop(pq)
-    # input loop to take input from user (only returns if this is valid)
+
     while 1:
         inp = input("Enter Action(s): ")
         inp.strip()
@@ -89,6 +97,8 @@ if __name__ == "__main__":
             #     state_node = create_game_state_node
             #     heappush(pq, state_node)
             action = get_action(view) # gets new actions
+            update_game_state(action)
+            pprint(vars(game_state))
             sock.send(action.encode('utf-8'))
 
     sock.close()
@@ -98,5 +108,5 @@ if __name__ == "__main__":
 # potential_move_array():
 
 # create game_node_state for each potential move
-def create_game_state_node():
+# def create_game_state_node():
 #  initial_position,current_position,direction,key,stepping_stones,raft,axe,have_gold,map_complete,map_representation,g_cost,h_cost)
