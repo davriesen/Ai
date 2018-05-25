@@ -25,6 +25,26 @@ class game_node_state(object):
         elif(self.direction == 'E'):
             self.current_position[0] = self.current_position[0] + 1
 
+    def change_dir(self, turn_dir):
+        if(turn_dir.lower() == 'l'):
+            if(self.direction == 'N'):
+                self.direction = 'W'
+            elif(self.direction == 'S'):
+                self.direction = 'E'
+            elif(self.direction == 'W'):
+                self.direction = 'S'
+            elif(self.direction == 'E'):
+                self.direction = 'N'
+        elif(turn_dir.lower() == 'r'):
+            if(self.direction == 'N'):
+                self.direction = 'E'
+            elif(self.direction == 'S'):
+                self.direction = 'W'
+            elif(self.direction == 'W'):
+                self.direction = 'N'
+            elif(self.direction == 'E'):
+                self.direction = 'S'
+
     @staticmethod
     def create_from(node):
         new_node = game_node_state(node.initial_position, node.current_position, node.direction, node.key,
