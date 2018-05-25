@@ -15,8 +15,25 @@ class game_node_state(object):
         self.g_cost = g_cost
         self.h_cost = h_cost
 
-    # def __cmp__(self, other):
-    #     return cmp(self.g_cost, other.g_cost)
+    def move_forward(self):
+        if(self.direction == 'N'):
+            self.current_position[1] = self.current_position[1] + 1
+        elif(self.direction == 'S'):
+            self.current_position[1] = self.current_position[1] - 1
+        elif(self.direction == 'W'):
+            self.current_position[0] = self.current_position[0] - 1
+        elif(self.direction == 'E'):
+            self.current_position[0] = self.current_position[0] + 1
+
+    @staticmethod
+    def create_from(node):
+        new_node = game_node_state(node.initial_position, node.current_position, node.direction, node.key,
+                                   node.stepping_stones, node.raft, node.axe, node.have_gold, node.map_complete,
+                                   node.map_representation, node.g_cost, node.h_cost)
+
+        return new_node
+
+
 
 
 
