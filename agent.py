@@ -18,7 +18,7 @@ pq = []
 def get_action(view):
 
     # REPLACE THIS WITH AI CODE TO CHOOSE ACTION ##
-    return heappop(pq)
+    # return heappop(pq)
     # input loop to take input from user (only returns if this is valid)
     while 1:
         inp = input("Enter Action(s): ")
@@ -95,11 +95,8 @@ if __name__ == "__main__":
 
 
 # returns array of
-potential_move_array():
+# potential_move_array():
 
 # create game_node_state for each potential move
-create_game_state_node(cur_pos):
+def create_game_state_node():
 #  initial_position,current_position,direction,key,stepping_stones,raft,axe,have_gold,map_complete,map_representation,g_cost,h_cost)
-    if(view[2,1] !== '$')
-        game_node_state([0,0],(cur_pos.x, xur_pos.),direction,key,0,0,0,false,.....)
-)
