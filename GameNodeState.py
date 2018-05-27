@@ -54,9 +54,39 @@ class GameNodeState(object):
         return new_node
 
 
+    @staticmethod
+    def transform_view(node, view):
+        newView = [[0 for x in range(5)] for y in range(5)]
+        if (node.direction == 'N'):
+            return view
+        elif(node.direction == 'E'):
+            i = 4
+            n = 0
+            for row in view:
+                for j in range(len(row)):
+                    newView[j][i] = view[n][j]
+                i = i - 1
+                n += 1
+            newView[2][2] = '>'
+        elif(node.direction == 'W'):
+            i = 4
+            n = 0
+            for row in view:
+                for j in range(len(row)):
+                    newView[i][j] = view[j][n]
+                i = i - 1
+                n += 1
+            newView[2][2] = '<'
+        elif(node.direction == 'S'):
+            i = 4
+            n = 0
+            for row in view:
+                k = 4
+                for j in range(len(row)):
+                    newView[i][k] = view[n][j]
+                    k = k-1
+                i = i-1
+                n += 1
+            newView[2][2] = 'v'
 
-
-
-
-        # cur_pos = tuple(x, y)
-        # mapRep.get(cur_pos) = empty, tree, wall, water, key, agent,
+        return newView
