@@ -5,7 +5,7 @@ class GameNodeStateTest(unittest.TestCase):
     def testMoveForward(self):
         game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
         game_state.move_forward()
-        self.assertEqual(game_state.current_position, (1,0))
+        self.assertEqual(game_state.current_position, (-1,0))
 
         game_state = GameNodeState((0,0),(0,0),'E',0,0,0,0,False,False,[[]],0,0)
         game_state.move_forward()
@@ -17,7 +17,7 @@ class GameNodeStateTest(unittest.TestCase):
 
         game_state = GameNodeState((0,0),(0,0),'S',0,0,0,0,False,False,[[]],0,0)
         game_state.move_forward()
-        self.assertEqual(game_state.current_position, (-1,0))
+        self.assertEqual(game_state.current_position, (1,0))
 
     def testTurnLeft(self):
         game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)

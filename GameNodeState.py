@@ -17,9 +17,9 @@ class GameNodeState(object):
 
     def move_forward(self):
         if(self.direction == 'N'):
-            self.current_position = (self.current_position[0] + 1, self.current_position[1])
-        elif(self.direction == 'S'):
             self.current_position = (self.current_position[0] - 1, self.current_position[1])
+        elif(self.direction == 'S'):
+            self.current_position = (self.current_position[0] + 1, self.current_position[1])
         elif(self.direction == 'W'):
             self.current_position = (self.current_position[0], self.current_position[1] - 1)
         elif(self.direction == 'E'):
