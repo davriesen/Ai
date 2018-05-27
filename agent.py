@@ -13,6 +13,9 @@ import socket
 from pprint import pprint
 from GameNodeState import  GameNodeState
 # declaring visible grid to agent
+from MapRepresentation import MapRepresentation
+
+mapRep = MapRepresentation()
 view = [['' for _ in range(5)] for _ in range(5)]
 pq = []
 game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
@@ -90,7 +93,12 @@ if __name__ == "__main__":
                 j=0
                 i=(i+1)%5
         if j==0 and i==0:
-            print_grid(view) # COMMENT THIS OUT ON SUBMISSION
+            # print_grid(view) # COMMENT THIS OUT ON SUBMISSION
+            newView = GameNodeState.transform_view(game_state, view)
+            print_grid(newView)
+            mapRep.update(game_state, newView)
+            mapRep.print_map()
+
             # for each potential move call function to create
             # potential_moves = potential_move_array()
             # for move in potential_moves:
@@ -98,15 +106,8 @@ if __name__ == "__main__":
             #     heappush(pq, state_node)
             action = get_action(view) # gets new actions
             update_game_state(action)
-            pprint(vars(game_state))
+            # pprint(vars(game_state))
+            # print(GameNodeState.transform_view(game_state, view))
             sock.send(action.encode('utf-8'))
 
     sock.close()
-
-
-# returns array of
-# potential_move_array():
-
-# create game_node_state for each potential move
-# def create_game_state_node():
-#  initial_position,current_position,direction,key,stepping_stones,raft,axe,have_gold,map_complete,map_representation,g_cost,h_cost)
