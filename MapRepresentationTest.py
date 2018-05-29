@@ -71,3 +71,17 @@ class MapRepresentationTest(unittest.TestCase):
         self.assertEqual(mapRep.get((-3,0)), 'e')
         self.assertEqual(mapRep.get((-3,1)), 'r')
         self.assertEqual(mapRep.get((-3,2)), 't')
+
+    def testGet(self):
+        mr = MapRepresentation()
+        mr.map[(0,5)] = 'Hey'
+        self.assertEqual(mr.get((0,5)), 'Hey')
+
+    def testNoWall(self):
+        mr = MapRepresentation()
+        self.assertEqual(mr.isWall((0,0)), False)
+
+    def testHasWall(self):
+        mr = MapRepresentation()
+        mr.set((0,5), '*')
+        self.assertEqual(mr.isWall((0,5)), True)

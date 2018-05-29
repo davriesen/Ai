@@ -1,4 +1,6 @@
 import unittest
+from unittest import mock
+
 from GameNodeState import GameNodeState
 
 class GameNodeStateTest(unittest.TestCase):
@@ -18,6 +20,14 @@ class GameNodeStateTest(unittest.TestCase):
         game_state = GameNodeState((0,0),(0,0),'S',0,0,0,0,False,False,[[]],0,0)
         game_state.move_forward()
         self.assertEqual(game_state.current_position, (1,0))
+
+    @mock.patch('MapRepresentation.MapRepresentation')
+    def testMoveForwardWall(self, mock_map):
+        game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+        game_state.map_representation = mock_map
+        mock_map.isWall.return_value = True
+        game_state.move_forward()
+        self.assertEqual(game_state.current_position, (0,0))
 
     def testTurnLeft(self):
         game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)

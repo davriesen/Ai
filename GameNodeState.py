@@ -16,14 +16,18 @@ class GameNodeState(object):
         self.h_cost = h_cost
 
     def move_forward(self):
+        next_position = None
         if(self.direction == 'N'):
-            self.current_position = (self.current_position[0] - 1, self.current_position[1])
+            next_position = (self.current_position[0] - 1, self.current_position[1])
         elif(self.direction == 'S'):
-            self.current_position = (self.current_position[0] + 1, self.current_position[1])
+            next_position = (self.current_position[0] + 1, self.current_position[1])
         elif(self.direction == 'W'):
-            self.current_position = (self.current_position[0], self.current_position[1] - 1)
+            next_position = (self.current_position[0], self.current_position[1] - 1)
         elif(self.direction == 'E'):
-            self.current_position = (self.current_position[0], self.current_position[1] + 1)
+            next_position = (self.current_position[0], self.current_position[1] + 1)
+
+        if(not self.map_representation.isWall(next_position)):
+            self.current_position = next_position
 
     def change_dir(self, turn_dir):
         if(turn_dir.lower() == 'l'):

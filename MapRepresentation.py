@@ -27,7 +27,14 @@ class MapRepresentation(object):
                 toPrint+=str(self.map[(row,col)])
             print(toPrint)
 
+    def set(self, coords, data):
+        self.map[(coords)] = data
+
     def get(self, coords):
         return self.map[coords]
+
+    def isWall(self, coords):
+        return (True if (self.get(coords)=='*') else False)
+
     # @staticmethod
     # def UpdateMapRep(maprep, cur_pos, view):
