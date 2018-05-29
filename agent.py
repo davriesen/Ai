@@ -18,7 +18,7 @@ from MapRepresentation import MapRepresentation
 mapRep = MapRepresentation()
 view = [['' for _ in range(5)] for _ in range(5)]
 pq = []
-game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,mapRep,0,0)
 
 def update_game_state(action):
     if action == 'f':
