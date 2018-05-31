@@ -30,7 +30,7 @@ class ExplorationMapTest(MapRepresentationTest):
                 myMap[(i,j)] = ' '
 
         # Adding invalid spots
-        myMap[(1,1)] = '*'
+        myMap[(0,-1)] = '*'
         myMap[(-1,0)] = 'T'
         myMap[(1,0)] = '~'
         myMap[(0, 1)] = '*'
