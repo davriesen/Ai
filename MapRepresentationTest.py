@@ -58,7 +58,7 @@ class MapRepresentationTest(unittest.TestCase):
         view[0][2] = 'e'
         view[0][3] = 'r'
         view[0][4] = 't'
-        print(view)
+
         mapRep.update(game_state, view)
 
         self.assertEqual(mapRep.get((-1,0)), view[2][2])
@@ -79,9 +79,20 @@ class MapRepresentationTest(unittest.TestCase):
 
     def testNoWall(self):
         mr = MapRepresentation()
+        mr.map[(0,0)] = ' '
         self.assertEqual(mr.isWall((0,0)), False)
 
     def testHasWall(self):
         mr = MapRepresentation()
         mr.set((0,5), '*')
         self.assertEqual(mr.isWall((0,5)), True)
+
+    def testGenerateNeighbours(self):
+        cur_pos = (0,0)
+
+        neighbours = MapRepresentation.generateNeighbours(cur_pos)
+
+        self.assertTrue((1,0) in neighbours)
+        self.assertTrue((-1,0) in neighbours)
+        self.assertTrue((0,1) in neighbours)
+        self.assertTrue((0,-1) in neighbours)
