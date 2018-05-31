@@ -9,34 +9,35 @@ class BFS(object):
     def __init__(self,start,goal,graph):
         self.start = start
         self.goal = goal
-        self.graph = grap
+        self.graph = graph
+
 
     def run_bfs(self):
         open = []
         visited = []
         #add start to open
-        open.append(start)
+        open.append(self.start)
         # keep looping until no nodes or goal found
         while open:
             # pop  first node from open
             n = open.pop(0)
             #if the goal has been found return array of coords from start -> goal.
-            if n.coordinates == goal:
+            if n.coordinates == self.goal:
                 #return all n parents
-                return coordinate_set(n)
+                return self.coordinate_set(n)
             if n not in visited:
                 # add node to list of checked nodes
                 visited.append(n)
                 y,x = n.coordinates
                 # add neighbours of node to queue
-                neighbours = graph.generateNeighbours(n.coordinates)
+                neighbours = self.graph.generateNeighbours(n.coordinates)
                 for neighbour in neighbours:
-                 open.append(neighbour)
-
+                    neighbour_node = Node(n,neighbour)
+                    open.append(neighbour_node)
         #no path
         return []
 
-    def coordinate_set(n):
+    def coordinate_set(self,n):
         chain = []
         curr = n
         parent = n.parent_node
@@ -46,6 +47,8 @@ class BFS(object):
             chain.append(curr.coordinates)
             parent = curr.parent_node
         return reversed(chain)
+
+
 
     # def convert_path_to_action(node):
     #     #given end node, trace up parents

@@ -15,6 +15,7 @@ from GameNodeState import  GameNodeState
 # declaring visible grid to agent
 from MapRepresentation import MapRepresentation
 from BFS import BFS
+from Node import Node
 mapRep = MapRepresentation()
 view = [['' for _ in range(5)] for _ in range(5)]
 pq = []
@@ -30,6 +31,11 @@ def update_game_state(action):
 # function to take get action from AI or user
 
 def get_action(view):
+    start = Node(None,(0,0))
+    bfs = BFS(start,(-4,3),mapRep)
+    route = bfs.run_bfs()
+    for step in route:
+        print(step)
     while 1:
         inp = input("Enter Action(s): ")
         inp.strip()
