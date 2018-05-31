@@ -14,7 +14,7 @@ from pprint import pprint
 from GameNodeState import  GameNodeState
 # declaring visible grid to agent
 from MapRepresentation import MapRepresentation
-
+from BFS import BFS
 mapRep = MapRepresentation()
 view = [['' for _ in range(5)] for _ in range(5)]
 pq = []
@@ -28,9 +28,8 @@ def update_game_state(action):
     elif action == 'l':
         game_state.change_dir('l')
 # function to take get action from AI or user
+
 def get_action(view):
-
-
     while 1:
         inp = input("Enter Action(s): ")
         inp.strip()
