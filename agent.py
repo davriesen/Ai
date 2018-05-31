@@ -30,9 +30,6 @@ def update_game_state(action):
 # function to take get action from AI or user
 
 def get_action(view):
-    start = Node(None,(0,0))
-    moves =  bfs(start,(-1,0),mapRep)
-    print(moves)
     while 1:
         inp = input("Enter Action(s): ")
         inp.strip()
