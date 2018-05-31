@@ -58,7 +58,7 @@ class MapRepresentationTest(unittest.TestCase):
         view[0][2] = 'e'
         view[0][3] = 'r'
         view[0][4] = 't'
-        print(view)
+
         mapRep.update(game_state, view)
 
         self.assertEqual(mapRep.get((-1,0)), view[2][2])
@@ -79,6 +79,7 @@ class MapRepresentationTest(unittest.TestCase):
 
     def testNoWall(self):
         mr = MapRepresentation()
+        mr.map[(0,0)] = ' '
         self.assertEqual(mr.isWall((0,0)), False)
 
     def testHasWall(self):
