@@ -38,3 +38,6 @@ class MapRepresentation(object):
 
     # @staticmethod
     # def UpdateMapRep(maprep, cur_pos, view):
+    #
+    # def generateNeighbours(self, coords): TO DO
+    #

@@ -77,9 +77,9 @@ class ExplorationMap(MapRepresentation):
     def getBestCoord(self):
         sortedWeights = [(coord, self.weights[coord]) for coord in sorted(self.weights, key=self.weights.get)]
         try:
-            coord = sortedWeights.pop()
-            while(coord not in self.visited):
-                coord = sortedWeights.pop()
+            coord = sortedWeights.pop()[0]
+            while(coord in self.visited):
+                coord = sortedWeights.pop()[0]
             self.visited.append(coord)
             return coord
         except IndexError:
