@@ -87,12 +87,12 @@ class MapRepresentationTest(unittest.TestCase):
         mr.set((0,5), '*')
         self.assertEqual(mr.isWall((0,5)), True)
 
-    def testGenerateNeighbours(self):
-        cur_pos = (0,0)
-
-        neighbours = MapRepresentation.generateNeighbours(cur_pos)
-
-        self.assertTrue((1,0) in neighbours)
-        self.assertTrue((-1,0) in neighbours)
-        self.assertTrue((0,1) in neighbours)
-        self.assertTrue((0,-1) in neighbours)
+    # def testGenerateNeighbours(self):
+    #     cur_pos = (0,0)
+    #
+    #     neighbours = MapRepresentation.generateNeighbours(cur_pos)
+    #
+    #     self.assertTrue((1,0) in neighbours)
+    #     self.assertTrue((-1,0) in neighbours)
+    #     self.assertTrue((0,1) in neighbours)
+    #     self.assertTrue((0,-1) in neighbours)
