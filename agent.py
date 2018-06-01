@@ -108,7 +108,6 @@ if __name__ == "__main__":
             #     state_node = create_game_state_node
             #     heappush(pq, state_node)
             action = get_action(view) # gets new actions
-            update_game_state(action)
             # pprint(vars(game_state))
             # print(GameNodeState.transform_view(game_state, view))
             sock.send(action.encode('utf-8'))
