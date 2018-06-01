@@ -16,7 +16,7 @@ class BFS(object):
         open = []
         visited = []
         #add start to open
-        open.append(self.start)
+        open.append(Node(None,self.start))
         # keep looping until no nodes or goal found
         while open:
             # pop  first node from open
@@ -25,7 +25,7 @@ class BFS(object):
             if n.coordinates == self.goal:
                 #return all n parents
                 return self.coordinate_set(n)
-            if n not in visited:
+            if not self.in_visited(n, visited):
                 # add node to list of checked nodes
                 visited.append(n)
                 y,x = n.coordinates
@@ -36,6 +36,12 @@ class BFS(object):
                     open.append(neighbour_node)
         #no path
         return []
+
+    def in_visited(selfself, node, visitedArray):
+        for n in visitedArray:
+            if n.coordinates == node.coordinates:
+                return True
+        return False
 
     def coordinate_set(self,n):
         chain = []
