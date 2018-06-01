@@ -23,14 +23,6 @@ view = [['' for _ in range(5)] for _ in range(5)]
 pq = []
 game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,mapRep,0,0)
 
-def update_game_state(action):
-    if action == 'f':
-        game_state.move_forward()
-    elif action == 'r':
-        game_state.change_dir('r')
-    elif action == 'l':
-        game_state.change_dir('l')
-# function to take get action from AI or user
 
 def get_action(view):
     bfs = BFS((0,0),(-2,-2),mapRep)
