@@ -169,14 +169,18 @@ class GameNodeState(object):
 
     @staticmethod
     def generateActions(cur_direction, coords_list):
-        cur = coords_list.pop(0)
-        direction = cur_direction
         all_actions = ''
-        for coord in coords_list:
+        try:
+            cur = coords_list.pop(0)
+            direction = cur_direction
 
-            next = coord
-            actions, direction = GameNodeState.generateAction(direction, cur, next)
-            all_actions+=actions
-            cur = next
+            for coord in coords_list:
 
-        return all_actions
+                next = coord
+                actions, direction = GameNodeState.generateAction(direction, cur, next)
+                all_actions+=actions
+                cur = next
+            return all_actions
+        except IndexError:
+            return all_actions
+
