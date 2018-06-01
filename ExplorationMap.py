@@ -18,7 +18,11 @@ class ExplorationMap(MapRepresentation):
         boundary_radius = 3
         for i in range(cur_pos[0] - boundary_radius, cur_pos[0] + boundary_radius + 1):
             for j in range(cur_pos[1] - boundary_radius, cur_pos[1] + boundary_radius + 1):
-                self.updateWeight((i, j))
+                try:
+                    if(self.get((i,j)) not in self.invalid):
+                        self.updateWeight((i, j))
+                except KeyError:
+                    continue
 
     def updateWeight(self, cur_cell):
         # Get coords of neighbours
