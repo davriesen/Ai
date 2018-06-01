@@ -11,12 +11,14 @@
 import sys
 import socket
 from pprint import pprint
+
+from ExplorationMap import ExplorationMap
 from GameNodeState import  GameNodeState
 # declaring visible grid to agent
 from MapRepresentation import MapRepresentation
 from BFS import BFS
 from Node import Node
-mapRep = MapRepresentation()
+mapRep = ExplorationMap()
 view = [['' for _ in range(5)] for _ in range(5)]
 pq = []
 game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,mapRep,0,0)
@@ -31,10 +33,15 @@ def update_game_state(action):
 # function to take get action from AI or user
 
 def get_action(view):
-    start = Node(None,(0,0))
-    bfs = BFS(start,(-7,0),mapRep)
+    bfs = BFS((0,0),(-2,-2),mapRep)
     route = bfs.run_bfs()
-    return bfs.convert_path_to_action(route)
+    if route == []:
+        print('NO ROUTE')
+    else:
+        for step in route:
+            print(step)
+
+    # return bfs.convert_path_to_action(route)
     while 1:
         inp = input("Enter Action(s): ")
         inp.strip()
