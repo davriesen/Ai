@@ -46,9 +46,36 @@ class BFS(object):
             curr = parent
             chain.append(curr.coordinates)
             parent = curr.parent_node
-        return reversed(chain)
+        chain = chain[::-1]
+        return chain
 
 
 
-    # def convert_path_to_action(node):
-    #     #given end node, trace up parents
+    #given array of coordinates create a seiries of actions
+    def convert_path_to_action(self,path):
+        i = 0
+        actions = list()
+        while i < len(path)-1:
+            # pop of current position and next postion
+            y,x = path[i]
+            # next
+            b,a = path[i+1]
+
+            # if it is -1 y from current move forward
+            if b == y-1:
+                actions.append('f')
+            #else if +1 y from current position move backward..(i.e rotate and move forward)
+            elif b == y+1:
+                actions.append('r')
+                actions.append('r')
+                actions.append('f')
+            #else if -1 x from current position rotate l and move f
+            elif a == x-1:
+                actions.append('l')
+                actions.append('f')
+            #else if +1 x from current position rotate r and move f
+            elif a == x+1:
+                actions.append('r')
+                actions.append('f')
+            i+=1
+        return ''.join(actions)

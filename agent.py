@@ -32,10 +32,9 @@ def update_game_state(action):
 
 def get_action(view):
     start = Node(None,(0,0))
-    bfs = BFS(start,(-4,3),mapRep)
+    bfs = BFS(start,(-7,0),mapRep)
     route = bfs.run_bfs()
-    for step in route:
-        print(step)
+    return bfs.convert_path_to_action(route)
     while 1:
         inp = input("Enter Action(s): ")
         inp.strip()
