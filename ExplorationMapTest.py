@@ -204,3 +204,33 @@ class ExplorationMapTest(MapRepresentationTest):
 
         coord = em.getBestCoord()
         self.assertEqual(coord, None)
+
+    # If object is invalid
+    def testIsValidToWalk1(self):
+        em = ExplorationMap()
+        em.set((5,5), '*')
+        em.set((5,4), '~')
+        em.set((5,3), '_')
+        em.set((5,2), 'T')
+        em.set((5,1), ' ')
+
+        self.assertFalse(em.isValidToWalk((5,5)))
+        self.assertFalse(em.isValidToWalk((5,4)))
+        self.assertFalse(em.isValidToWalk((5,3)))
+        self.assertFalse(em.isValidToWalk((5,2)))
+        self.assertTrue(em.isValidToWalk((5,1)))
+
+        # Test a region which has no info
+        self.assertFalse(em.isValidToWalk((0,0)))
+
+    def testGenerateNeighbours(self):
+        em = ExplorationMap()
+        em.set((-1,0), ' ')
+        em.set((1,0), '*')
+        em.set((0,1), ' ')
+
+        neighbours = em.generateNeighbours((0,0))
+
+        self.assertTrue((-1,0) in neighbours)
+        self.assertTrue((0,1) in neighbours)
+        self.assertFalse((1,0) in neighbours)

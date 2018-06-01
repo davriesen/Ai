@@ -28,24 +28,10 @@ class MapRepresentation(object):
             print(toPrint)
 
     def set(self, coords, data):
-        self.map[(coords)] = data
+        self.map[coords] = data
 
     def get(self, coords):
         return self.map[coords]
 
     def isWall(self, coords):
         return (True if (self.get(coords)=='*') else False)
-
-    @staticmethod
-    def generateNeighbours(cur_pos):
-        neighbours = []
-        # N
-        neighbours.append((cur_pos[0]-1,cur_pos[1]))
-        # S
-        neighbours.append((cur_pos[0]+1,cur_pos[1]))
-        # E
-        neighbours.append((cur_pos[0],cur_pos[1]-1))
-        # W
-        neighbours.append((cur_pos[0],cur_pos[1]+1))
-
-        return neighbours

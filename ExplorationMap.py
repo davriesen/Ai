@@ -70,6 +70,16 @@ class ExplorationMap(MapRepresentation):
 
         self.weights[cur_cell] = weight
 
+    def isValidToWalk(self, coord):
+        try:
+            cell_contents = self.get(coord)
+            if cell_contents in self.invalid:
+                return False
+            else:
+                return True
+        except KeyError:
+            return False
+
     # Returns the highest priority (highest weight) coordinate
     # If no valid coordinates
     # TO DO: Return CLOSEST coord with HIGHEST WEIGHT
@@ -84,3 +94,20 @@ class ExplorationMap(MapRepresentation):
             return coord
         except IndexError:
             return None
+
+    def generateNeighbours(self, cur_pos):
+        neighbours = []
+        # N
+        if(self.isValidToWalk((cur_pos[0]-1,cur_pos[1]))):
+            neighbours.append((cur_pos[0]-1,cur_pos[1]))
+        # S
+        if(self.isValidToWalk((cur_pos[0]+1,cur_pos[1]))):
+            neighbours.append((cur_pos[0]+1,cur_pos[1]))
+        # E
+        if(self.isValidToWalk((cur_pos[0], cur_pos[1]-1))):
+            neighbours.append((cur_pos[0],cur_pos[1]-1))
+        # W
+        if(self.isValidToWalk((cur_pos[0], cur_pos[1]+1))):
+            neighbours.append((cur_pos[0],cur_pos[1]+1))
+
+        return neighbours
