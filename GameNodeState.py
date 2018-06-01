@@ -94,3 +94,89 @@ class GameNodeState(object):
             newView[2][2] = 'v'
 
         return newView
+
+    @staticmethod
+    def turn(cur_direction, action):
+        final_direction = ''
+        if(action.lower() == 'l'):
+            if(cur_direction == 'N'):
+                final_direction = 'W'
+            elif(cur_direction == 'S'):
+                final_direction = 'E'
+            elif(cur_direction == 'W'):
+                final_direction = 'S'
+            elif(cur_direction == 'E'):
+                final_direction = 'N'
+        elif(action.lower() == 'r'):
+            if(cur_direction == 'N'):
+                final_direction = 'E'
+            elif(cur_direction == 'S'):
+                final_direction = 'W'
+            elif(cur_direction == 'W'):
+                final_direction = 'N'
+            elif(cur_direction == 'E'):
+                final_direction = 'S'
+
+        return final_direction
+
+    @staticmethod
+    def generateAction(cur_direction, cur_coord, next_coord):
+        cell_direction = ''
+        if(next_coord[0] - cur_coord[0] == -1):
+            cell_direction = 'N'
+        elif(next_coord[0] - cur_coord[0] == 1):
+            cell_direction = 'S'
+        elif(next_coord[1] - cur_coord[1] == 1):
+            cell_direction = 'E'
+        elif(next_coord[1] - cur_coord[1] == -1):
+            cell_direction = 'W'
+
+        actions = ''
+        if(cur_direction == cell_direction):
+            actions+='f'
+        elif(cur_direction == 'N'):
+            if(cell_direction == 'E'):
+                actions+='rf'
+            elif(cell_direction == 'S'):
+                actions+='rrf'
+            elif(cell_direction == 'W'):
+                actions+='lf'
+        elif(cur_direction == 'S'):
+            if(cell_direction == 'N'):
+                actions+='rrf'
+            elif(cell_direction == 'E'):
+                actions+='lf'
+            elif(cell_direction == 'W'):
+                actions+='rf'
+
+        elif(cur_direction == 'E'):
+            if(cell_direction == 'N'):
+                actions+='lf'
+            elif(cell_direction == 'S'):
+                actions+='rf'
+            elif(cell_direction == 'W'):
+                actions+='rrf'
+
+        elif(cur_direction == 'W'):
+            if(cell_direction == 'N'):
+                actions+='rf'
+            elif(cell_direction == 'E'):
+                actions+='rrf'
+            elif(cell_direction == 'S'):
+                actions+='lf'
+
+        return actions, cell_direction
+
+    @staticmethod
+    def generateActions(cur_direction, coords_list):
+        cur = coords_list.pop(0)
+        direction = cur_direction
+        all_actions = ''
+        for coord in coords_list:
+
+            next = coord
+            actions, direction = GameNodeState.generateAction(direction, cur, next)
+            all_actions+=actions
+            cur = next
+
+        return all_actions

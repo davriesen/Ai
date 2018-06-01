@@ -33,7 +33,7 @@ def get_action(view):
         for step in route:
             print(step)
 
-    # return bfs.convert_path_to_action(route)
+    print(bfs.convert_path_to_action(route))
     while 1:
         inp = input("Enter Action(s): ")
         inp.strip()

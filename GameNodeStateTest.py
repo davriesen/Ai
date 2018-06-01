@@ -130,3 +130,47 @@ class GameNodeStateTest(unittest.TestCase):
         expected_view[2][3] = 'a' #EAST
 
         self.assertEqual(newView, expected_view)
+
+    def testTurn(self):
+        self.assertEqual(GameNodeState.turn('N', 'r'), 'E')
+        self.assertEqual(GameNodeState.turn('N', 'l'), 'W')
+        self.assertEqual(GameNodeState.turn('E', 'r'), 'S')
+        self.assertEqual(GameNodeState.turn('E', 'l'), 'N')
+        self.assertEqual(GameNodeState.turn('S', 'r'), 'W')
+        self.assertEqual(GameNodeState.turn('S', 'l'), 'E')
+        self.assertEqual(GameNodeState.turn('W', 'r'), 'N')
+        self.assertEqual(GameNodeState.turn('W', 'l'), 'S')
+
+    def testGenerateAction(self):
+        self.assertEqual(GameNodeState.generateAction('N', (0,0), (-1,0)), ('f', 'N'))
+        self.assertEqual(GameNodeState.generateAction('N', (0,0), (1,0)), ('rrf', 'S'))
+        self.assertEqual(GameNodeState.generateAction('N', (0,0), (0,-1)), ('lf', 'W'))
+        self.assertEqual(GameNodeState.generateAction('N', (0,0), (0,1)), ('rf', 'E'))
+
+        self.assertEqual(GameNodeState.generateAction('E', (0,0), (-1,0)), ('lf', 'N'))
+        self.assertEqual(GameNodeState.generateAction('E', (0,0), (1,0)), ('rf', 'S'))
+        self.assertEqual(GameNodeState.generateAction('E', (0,0), (0,-1)), ('rrf', 'W'))
+        self.assertEqual(GameNodeState.generateAction('E', (0,0), (0,1)), ('f', 'E'))
+
+        self.assertEqual(GameNodeState.generateAction('S', (0,0), (-1,0)), ('rrf', 'N'))
+        self.assertEqual(GameNodeState.generateAction('S', (0,0), (1,0)), ('f', 'S'))
+        self.assertEqual(GameNodeState.generateAction('S', (0,0), (0,-1)), ('rf', 'W'))
+        self.assertEqual(GameNodeState.generateAction('S', (0,0), (0,1)), ('lf', 'E'))
+
+        self.assertEqual(GameNodeState.generateAction('W', (0,0), (-1,0)), ('rf', 'N'))
+        self.assertEqual(GameNodeState.generateAction('W', (0,0), (1,0)), ('lf', 'S'))
+        self.assertEqual(GameNodeState.generateAction('W', (0,0), (0,-1)), ('f', 'W'))
+        self.assertEqual(GameNodeState.generateAction('W', (0,0), (0,1)), ('rrf', 'E'))
+
+    def testGenerateActions(self):
+        coords = [
+            (0,0), (-1,0), (-2, 0), (-2, 1), (-2, 2), (-2, 3)
+        ]
+        expected_actions = 'ffrfff'
+        self.assertEqual(GameNodeState.generateActions('N', coords), expected_actions)
+
+        coords = [
+            (0,0), (1,0), (1, 1), (1, 2), (0, 2), (0, 3)
+        ]
+        expected_actions = 'rrflfflfrf'
+        self.assertEqual(GameNodeState.generateActions('N', coords), expected_actions)
