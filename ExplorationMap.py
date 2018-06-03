@@ -33,15 +33,6 @@ class ExplorationMap(MapRepresentation):
             return None
 
         weight = 0
-        # for i in range(cur_cell[0] - boundary_radius, cur_cell[0] + boundary_radius + 1):
-        #     for j in range(cur_cell[1] - boundary_radius, cur_cell[1] + boundary_radius + 1):
-        #         if(not ((i, j) == cur_cell)):
-        #             try:
-        #                 cell = self.get((i,j))
-        #                 if cell not in self.invalid:
-        #                     weight += 1
-        #             except KeyError:
-        #                 continue
 
         #N
         try:
@@ -72,6 +63,8 @@ class ExplorationMap(MapRepresentation):
         except KeyError:
             weight = weight
 
+        if weight == 4:
+            self.visited.append(cur_cell)
         self.weights[cur_cell] = weight
 
     def isValidToWalk(self, coord):

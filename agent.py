@@ -22,7 +22,7 @@ mapRep = ExplorationMap()
 view = [['' for _ in range(5)] for _ in range(5)]
 pq = []
 game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,mapRep,0,0)
-
+phase = 'EXPLORE'
 actions_to_send = []
 
 
@@ -103,9 +103,27 @@ if __name__ == "__main__":
             mapRep.update(game_state, newView)
             mapRep.print_map()
 
-            while(len(actions_to_send) == 0):
-                bfs = BFS(game_state.current_position, mapRep.getBestCoord(), mapRep)
+            while(len(actions_to_send) == 0 and phase == 'EXPLORE'):
+                nextCoord = mapRep.getBestCoord()
+                if(nextCoord == None):
+                    phase = 'RETRIEVE'
+                    break
+                else:
+                    bfs = BFS(game_state.current_position, nextCoord, mapRep)
+                    actions_to_send = list(GameNodeState.generateActions(game_state.direction, bfs.run_bfs()))
+
+            while(len(actions_to_send) == 0 and phase == 'RETRIEVE'):
+                goal = mapRep.getGoldCoord()
+
+                bfs = BFS(game_state.current_position, goal, mapRep)
                 actions_to_send = list(GameNodeState.generateActions(game_state.direction, bfs.run_bfs()))
+                phase = 'RETURN'
+
+            while(len(actions_to_send) == 0 and phase == 'RETURN'):
+
+                bfs = BFS(game_state.current_position, (0,0), mapRep)
+                actions_to_send = list(GameNodeState.generateActions(game_state.direction, bfs.run_bfs()))
+
 
             next_action = actions_to_send.pop(0)
             game_state.updateGameState(next_action)

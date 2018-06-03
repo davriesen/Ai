@@ -35,3 +35,10 @@ class MapRepresentation(object):
 
     def isWall(self, coords):
         return (True if (self.get(coords)=='*') else False)
+
+    def getGoldCoord(self):
+        for coord in self.map.keys():
+            if self.get(coord) == '$':
+                return coord
+
+        return None
