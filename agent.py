@@ -23,17 +23,19 @@ view = [['' for _ in range(5)] for _ in range(5)]
 pq = []
 game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,mapRep,0,0)
 
+actions_to_send = []
+
 
 def get_action(view):
-    bfs = BFS((0,0),(-2,-2),mapRep)
-    route = bfs.run_bfs()
-    if route == []:
-        print('NO ROUTE')
-    else:
-        for step in route:
-            print(step)
-
-    print(bfs.convert_path_to_action(route))
+    # bfs = BFS((0,0),(-2,-2),mapRep)
+    # route = bfs.run_bfs()
+    # if route == []:
+    #     print('NO ROUTE')
+    # else:
+    #     for step in route:
+    #         print(step)
+    #
+    # print(GameNodeState.generateActions(game_state.direction, route))
     while 1:
         inp = input("Enter Action(s): ")
         inp.strip()
@@ -98,18 +100,15 @@ if __name__ == "__main__":
         if j==0 and i==0:
             # print_grid(view) # COMMENT THIS OUT ON SUBMISSION
             newView = GameNodeState.transform_view(game_state, view)
-            print_grid(newView)
             mapRep.update(game_state, newView)
             mapRep.print_map()
 
-            # for each potential move call function to create
-            # potential_moves = potential_move_array()
-            # for move in potential_moves:
-            #     state_node = create_game_state_node
-            #     heappush(pq, state_node)
-            action = get_action(view) # gets new actions
-            # pprint(vars(game_state))
-            # print(GameNodeState.transform_view(game_state, view))
-            sock.send(action.encode('utf-8'))
+            while(len(actions_to_send) == 0):
+                bfs = BFS(game_state.current_position, mapRep.getBestCoord(), mapRep)
+                actions_to_send = list(GameNodeState.generateActions(game_state.direction, bfs.run_bfs()))
+
+            next_action = actions_to_send.pop(0)
+            game_state.updateGameState(next_action)
+            sock.send(next_action.encode('utf-8'))
 
     sock.close()

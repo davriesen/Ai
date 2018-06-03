@@ -4,14 +4,14 @@ from MapRepresentation import MapRepresentation
 class ExplorationMap(MapRepresentation):
 
     def __init__(self):
-        MapRepresentation.__init__(self)
+        super().__init__()
         self.weights = {}
         # self.valid = {' ', 'k', 'a'}
         self.invalid = {'*', '~', 'T', '_'}
         self.visited = []
 
     def update(self, state, view):
-        MapRepresentation.update(self, state, view)
+        super().update(state, view)
         self.updateWeights(state.current_position)
 
     def updateWeights(self, cur_pos):

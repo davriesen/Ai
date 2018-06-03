@@ -49,6 +49,12 @@ class GameNodeState(object):
             elif(self.direction == 'E'):
                 self.direction = 'S'
 
+    def updateGameState(self, action):
+        if(action == 'f'):
+            self.move_forward()
+        elif(action == 'r' or action == 'l'):
+            self.change_dir(action)
+
     @staticmethod
     def create_from(node):
         new_node = GameNodeState(node.initial_position, node.current_position, node.direction, node.key,
