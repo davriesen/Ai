@@ -32,6 +32,7 @@ class ExplorationMap(MapRepresentation):
         except KeyError:
             return None
 
+        isFoggy = False
         weight = 0
 
         #N
@@ -41,6 +42,7 @@ class ExplorationMap(MapRepresentation):
                 weight += 1
         except KeyError:
             weight = weight
+            isFoggy = True
         #E
         try:
             cell = self.get((cur_cell[0], cur_cell[1] + 1))
@@ -48,6 +50,7 @@ class ExplorationMap(MapRepresentation):
                 weight += 1
         except KeyError:
             weight = weight
+            isFoggy = True
         #S
         try:
             cell = self.get((cur_cell[0] + 1, cur_cell[1]))
@@ -55,6 +58,7 @@ class ExplorationMap(MapRepresentation):
                 weight += 1
         except KeyError:
             weight = weight
+            isFoggy = True
         #W
         try:
             cell = self.get((cur_cell[0], cur_cell[1]-1))
@@ -62,10 +66,14 @@ class ExplorationMap(MapRepresentation):
                 weight += 1
         except KeyError:
             weight = weight
+            isFoggy = True
 
-        if weight == 4:
-            self.visited.append(cur_cell)
-        self.weights[cur_cell] = weight
+        if isFoggy == False:
+            if cur_cell not in self.visited:
+                self.visited.append(cur_cell)
+        else:
+            self.weights[cur_cell] = weight
+
 
     def isValidToWalk(self, coord):
         try:
