@@ -39,7 +39,7 @@ class MapRepresentation(object):
         return self.map[coords]
 
     def isWall(self, coords):
-        return (True if (self.get(coords)=='*') else False)
+        return (True if (self.get(coords)=='*' or self.get(coords)=='T' or self.get(coords)=='_') else False)
 
     def getGoldCoord(self):
         for coord in self.map.keys():

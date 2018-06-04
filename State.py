@@ -14,6 +14,7 @@ class State(object):
         self.axe = axe
         self.have_gold = have_gold
         self.map_representation = map_representation
+        self.facing_door = False
 
     # Map_representation is something we don't want to consider when comparing states of the game
     def __eq__(self, other):
@@ -75,11 +76,17 @@ class State(object):
         elif(self.direction == 'E'):
             next_position = (self.current_position[0], self.current_position[1] + 1)
 
-        if(not self.map_representation.isWall(next_position)):
-            self.current_position = next_position
+        try:
+            if(not self.map_representation.isWall(next_position)):
+                self.current_position = next_position
 
-            if(self.map_representation.get(next_position) == '$'):
-                self.have_gold = True
+                if(self.map_representation.get(next_position) == '$'):
+                    self.have_gold = True
+
+            # if(self.map_representation.get(next_position) == 'k'):
+            #     self.key = True
+        except KeyError:
+            return None
 
     # Update the game state to represent the action of turning 'l' or 'r'
     def change_dir(self, turn_dir):
@@ -114,18 +121,25 @@ class State(object):
     def generateNeighbours(self):
         neighbours = []
         # f
-        neighbours.append(self.neighbourF())
+        new = self.neighbourF()
+
+        neighbours.append(new)
         # l
         neighbours.append(self.neighbourL())
         # r
         neighbours.append(self.neighbourR())
+        # # u
+        # neighbours.append(self.neighbourU())
         return neighbours
 
+    # def neighbourU(self):
+    #     if(self.key and self.map_representation.get()== '_')
     # Neighbour for move forward
     def neighbourF(self):
         newNode = self.create_from(self)
         newNode.move_forward()
         return newNode
+
 
     #Neighbour for move Left
     def neighbourL(self):
@@ -283,3 +297,42 @@ class State(object):
         except IndexError:
             return all_actions
 
+    @staticmethod
+    def generateActionAStar(state, next_state):
+        # If position is diffrent, we have moved
+        if(state.current_position != next_state.current_position):
+            return 'f'
+        # If direction is diffrent, we have turned
+        elif(state.direction != next_state.direction):
+            if( (state.direction == 'N' and next_state.direction =='E') or
+                (state.direction == 'E' and next_state.direction == 'S') or
+                (state.direction == 'S' and next_state.direction == 'W') or
+                (state.direction == 'W' and next_state.direction == 'N')
+            ):
+                return 'r'
+
+            else:
+                return 'l'
+
+    @staticmethod
+    def generateActionsAStar(state_list):
+        all_actions = ''
+        cur = None
+        for state in state_list:
+            next = state
+            if cur:
+                all_actions += State.generateActionAStar(cur, next)
+            cur = next
+
+        return all_actions
+        # try:
+        #     cur = state_list.pop(0)
+        #
+        #     for state in state_list:
+        #         next = state
+        #         all_actions += State.generateActionAStar(cur, next)
+        #
+        #     return all_actions
+        #
+        # except IndexError:
+        #     return all_actions
