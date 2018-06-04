@@ -121,6 +121,8 @@ if __name__ == "__main__":
                     break
                 else:
                     bfs = BFS(game_state.current_position, nextCoord, mapRep)
+                    actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
+                    
             while(len(actions_to_send) == 0 and phase == 'RETRIEVE'):
                 goal = game_state.generateGoldGoal()
 
