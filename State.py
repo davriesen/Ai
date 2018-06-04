@@ -1,5 +1,7 @@
+# Class to hold relevant information for the state of the game
+# Everything we need to keep track of the agent and the world is kept in here
 class State(object):
-    def __init__(self, initial_position,current_position,direction,key,stepping_stones,raft,axe,have_gold,map_complete,map_representation,g_cost,h_cost):
+    def __init__(self, initial_position,current_position,direction,key,stepping_stones,raft,axe,have_gold,map_representation,):
         # super(game_node, self).__init__()
         # self.arg = arg
         self.initial_position = initial_position
@@ -11,11 +13,58 @@ class State(object):
         self.raft = raft
         self.axe = axe
         self.have_gold = have_gold
-        self.map_complete = map_complete
         self.map_representation = map_representation
-        self.g_cost = g_cost
-        self.h_cost = h_cost
+        self.facing_door = False
 
+    # Map_representation is something we don't want to consider when comparing states of the game
+    def __eq__(self, other):
+        return(self.initial_position == other.initial_position and self.current_position == other.current_position
+               and self.direction == other.direction and self.key == other.key and self.stones == other.stones
+               and self.stepping_stones == other.stepping_stones and self.raft == other.raft and self.axe == other.axe
+               and self.have_gold == other.have_gold
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    # Return with the gold to the initial position
+    def generateEndGoal(self):
+
+        goal_state = State(
+            self.initial_position,
+            self.initial_position,
+            self.direction,
+            key=0,
+            stepping_stones=0,
+            raft=0,
+            axe=0,
+            have_gold=True,
+            map_representation=None
+        )
+
+        return goal_state
+    # Given we know where the gold is, generate a goal state where the agent has the gold and it as the gold position
+    def generateGoldGoal(self):
+
+        pos = self.map_representation.getGoldCoord()
+        if pos == None:
+            return None
+
+        goal_state = State(
+            self.initial_position,
+            pos,
+            self.direction,
+            key=0,
+            stepping_stones=0,
+            raft=0,
+            axe=0,
+            have_gold=True,
+            map_representation=None
+        )
+
+        return goal_state
+
+    # Update the game state to represent the action of 'moving forward'
     def move_forward(self):
         next_position = None
         if(self.direction == 'N'):
@@ -27,9 +76,19 @@ class State(object):
         elif(self.direction == 'E'):
             next_position = (self.current_position[0], self.current_position[1] + 1)
 
-        if(not self.map_representation.isWall(next_position)):
-            self.current_position = next_position
+        try:
+            if(not self.map_representation.isWall(next_position)):
+                self.current_position = next_position
 
+                if(self.map_representation.get(next_position) == '$'):
+                    self.have_gold = True
+
+            # if(self.map_representation.get(next_position) == 'k'):
+            #     self.key = True
+        except KeyError:
+            return None
+
+    # Update the game state to represent the action of turning 'l' or 'r'
     def change_dir(self, turn_dir):
         if(turn_dir.lower() == 'l'):
             if(self.direction == 'N'):
@@ -50,21 +109,61 @@ class State(object):
             elif(self.direction == 'E'):
                 self.direction = 'S'
 
+    # Function which updates the game state with respect to the incoming action
     def updateGameState(self, action):
         if(action == 'f'):
             self.move_forward()
         elif(action == 'r' or action == 'l'):
             self.change_dir(action)
 
+    # Function which generates 'neighbours', given the current game_state
+    # Neighbours are defined as a state of the game which is one action 'different' from the current game state
+    def generateNeighbours(self):
+        neighbours = []
+        # f
+        new = self.neighbourF()
+
+        neighbours.append(new)
+        # l
+        neighbours.append(self.neighbourL())
+        # r
+        neighbours.append(self.neighbourR())
+        # # u
+        # neighbours.append(self.neighbourU())
+        return neighbours
+
+    # def neighbourU(self):
+    #     if(self.key and self.map_representation.get()== '_')
+    # Neighbour for move forward
+    def neighbourF(self):
+        newNode = self.create_from(self)
+        newNode.move_forward()
+        return newNode
+
+
+    #Neighbour for move Left
+    def neighbourL(self):
+        newNode = self.create_from(self)
+        newNode.change_dir('l')
+        return newNode
+
+    # Neighbour for move right
+    def neighbourR(self):
+        newNode = self.create_from(self)
+        newNode.change_dir('r')
+        return newNode
+
+    # Helper function to 'copy' existing game states
     @staticmethod
     def create_from(node):
         new_node = State(node.initial_position, node.current_position, node.direction, node.key,
-                                 node.stepping_stones, node.raft, node.axe, node.have_gold, node.map_complete,
-                                 node.map_representation, node.g_cost, node.h_cost)
+                                 node.stepping_stones, node.raft, node.axe, node.have_gold,
+                                 node.map_representation)
 
         return new_node
 
 
+    # Helper function used to transform the view into an object that does not rotate when the agent turns left or right
     @staticmethod
     def transform_view(node, view):
         newView = [[0 for x in range(5)] for y in range(5)]
@@ -102,6 +201,7 @@ class State(object):
 
         return newView
 
+    # Given a direction and a turn action, returns resulting new direction agent is facing
     @staticmethod
     def turn(cur_direction, action):
         final_direction = ''
@@ -126,6 +226,8 @@ class State(object):
 
         return final_direction
 
+    # Given a direction, position, and an orthogonally adjacent position,
+    # Generate series of actions for the agent to travel to the new position
     @staticmethod
     def generateAction(cur_direction, cur_coord, next_coord):
         cell_direction = ''
@@ -174,6 +276,10 @@ class State(object):
 
         return actions, cell_direction
 
+    # Given a direction, and a list of coordinates such that
+    # pairs of elements (coords_list[n], coords_list[n+1]) are orthogonally adjacent,
+    # generate a series of actions that will take the agent through all the coordinates in the list
+    # starting from coords_list[0], ending at the final element of coords_list
     @staticmethod
     def generateActions(cur_direction, coords_list):
         all_actions = ''
@@ -191,3 +297,42 @@ class State(object):
         except IndexError:
             return all_actions
 
+    @staticmethod
+    def generateActionAStar(state, next_state):
+        # If position is diffrent, we have moved
+        if(state.current_position != next_state.current_position):
+            return 'f'
+        # If direction is diffrent, we have turned
+        elif(state.direction != next_state.direction):
+            if( (state.direction == 'N' and next_state.direction =='E') or
+                (state.direction == 'E' and next_state.direction == 'S') or
+                (state.direction == 'S' and next_state.direction == 'W') or
+                (state.direction == 'W' and next_state.direction == 'N')
+            ):
+                return 'r'
+
+            else:
+                return 'l'
+
+    @staticmethod
+    def generateActionsAStar(state_list):
+        all_actions = ''
+        cur = None
+        for state in state_list:
+            next = state
+            if cur:
+                all_actions += State.generateActionAStar(cur, next)
+            cur = next
+
+        return all_actions
+        # try:
+        #     cur = state_list.pop(0)
+        #
+        #     for state in state_list:
+        #         next = state
+        #         all_actions += State.generateActionAStar(cur, next)
+        #
+        #     return all_actions
+        #
+        # except IndexError:
+        #     return all_actions

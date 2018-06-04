@@ -6,7 +6,7 @@ from State import State
 class StateTest(unittest.TestCase):
     @mock.patch('MapRepresentation.MapRepresentation')
     def testMoveForward(self, mock_map):
-        game_state = State((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+        game_state = State((0,0),(0,0),'N',0,0,0,0,False,[[]])
         game_state.map_representation = mock_map
         mock_map.isWall.return_value = False
         game_state.move_forward()
@@ -29,14 +29,14 @@ class StateTest(unittest.TestCase):
 
     @mock.patch('MapRepresentation.MapRepresentation')
     def testMoveForwardWall(self, mock_map):
-        game_state = State((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+        game_state = State((0,0),(0,0),'N',0,0,0,0,False,[[]])
         game_state.map_representation = mock_map
         mock_map.isWall.return_value = True
         game_state.move_forward()
         self.assertEqual(game_state.current_position, (0,0))
 
     def testTurnLeft(self):
-        game_state = State((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+        game_state = State((0,0),(0,0),'N',0,0,0,0,False,[[]])
         game_state.change_dir('l')
         self.assertEqual(game_state.direction, 'W')
         game_state.change_dir('l')
@@ -47,7 +47,7 @@ class StateTest(unittest.TestCase):
         self.assertEqual(game_state.direction, 'N')
 
     def testTurnRight(self):
-        game_state = State((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+        game_state = State((0,0),(0,0),'N',0,0,0,0,False,[[]])
         game_state.change_dir('r')
         self.assertEqual(game_state.direction, 'E')
         game_state.change_dir('r')
@@ -59,7 +59,7 @@ class StateTest(unittest.TestCase):
 
     # make sure view stays static except for player marker
     def testTransformViewNorth(self):
-        game_state = State((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+        game_state = State((0,0),(0,0),'N',0,0,0,0,False,[[]])
 
         view = [[' ' for _ in range(5)] for _ in range(5)]
         view[2][2] = '^'
@@ -72,7 +72,7 @@ class StateTest(unittest.TestCase):
         self.assertEqual(newView, view)
 
     def testTransformViewEast(self):
-        game_state = State((0,0),(0,0),'E',0,0,0,0,False,False,[[]],0,0)
+        game_state = State((0,0),(0,0),'E',0,0,0,0,False,[[]])
 
         view = [[' ' for _ in range(5)] for _ in range(5)]
         view[2][2] = '^'
@@ -92,7 +92,7 @@ class StateTest(unittest.TestCase):
         self.assertEqual(newView, expected_view)
 
     def testTransformViewWest(self):
-        game_state = State((0,0),(0,0),'W',0,0,0,0,False,False,[[]],0,0)
+        game_state = State((0,0),(0,0),'W',0,0,0,0,False,[[]])
 
         view = [[' ' for _ in range(5)] for _ in range(5)]
         view[2][2] = '^'
@@ -112,7 +112,7 @@ class StateTest(unittest.TestCase):
         self.assertEqual(newView, expected_view)
 
     def testTransformViewSouth(self):
-        game_state = State((0,0),(0,0),'S',0,0,0,0,False,False,[[]],0,0)
+        game_state = State((0,0),(0,0),'S',0,0,0,0,False,[[]])
 
         view = [[' ' for _ in range(5)] for _ in range(5)]
         view[2][2] = '^'
@@ -174,3 +174,18 @@ class StateTest(unittest.TestCase):
         ]
         expected_actions = 'rrflfflfrf'
         self.assertEqual(State.generateActions('N', coords), expected_actions)
+
+    def testContains(self):
+        game_state1 = State((0,0),(0,0),'N',0,0,0,0,False,[[]])
+        game_state2 = State((0,0),(0,0),'N',0,0,0,0,False,[[]])
+
+        game_state1.mapRep = 'test1'
+        game_state2.mapRep = 'test2'
+
+        self.assertEqual(game_state1 == game_state2, True)
+
+        mySet = []
+        mySet.append(game_state1)
+
+        self.assertEqual(game_state1 in mySet, True)
+        self.assertEqual(game_state2 in mySet, True)
