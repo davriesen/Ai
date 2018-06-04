@@ -8,15 +8,39 @@
 # created by Leo Hoare
 # with slight modifications by Alan Blair
 
-# Briefly describe how your program works,
-# including any algorithms and data structures employed, and explain any design decisions you made along the way:
-# Our agent goes through stages to solve a map.
-#STAGE 1. EXPLORE:
-# The agent builds up its awareness of the world. The global map is an object MapRepresentation which is a dict havings keys(y,x) tuples , and values (' ','T','~','-','$','*)
-# The agent explores the map, visiting areas which will reveal previously hidden areas. The purpose of exploration is to dsicover as much of the world as possible inorder to identify locations of items,goals,and areas to avoid
-# BFS is used to generate a path to get the agent from its current location to a goal. Path's are a set of coordinates which are
-# converted into a series of actions via a function. Goals are generated via a function getBestCoord() which uses weights to prioritize locations that will reveal hidden spots.
-# BFS uses an open/visited queue(array) to keep track of which nodes to explore. Nodes are custom class contatining map coordinates, as well as a parent
+"""
+The agent goes through two distinct stages or phases: Explore, and Retrieve + Return.
+
+STAGE 1. EXPLORE:
+The agent builds up its awareness of the game world. The agent will iteratively use BFS to reveal as much of the map as possible.
+Locations on the map that will reveal more of the map are prioritized, and are set as the 'goals' for the BFS.
+To represent the global map, a class 'ExplorationMap' has been created. Here, the bookkeeping for updating the agent's knowledge base of the world map is defined.
+Furthermore, there are functions which provide functionality to give the priorities to the known locations for BFS traversal, and subsequently a 'getBestCoord()' function
+will return the highest priority location to visit to the agent.
+Nodes that the BFS will search are merely the coordinates of valid locations that the agent can move in.
+
+STAGE 2. Retrieve + Return:
+In this phase, we switch to A* search. Instead of the A* nodes being just valid locations the agent can move in, each node is a possible state of the game.
+A class 'State' has been defined which keeps track of the variables that may change during the course of a game; direction, position, items held, etc.
+The 'neighbours' for a given state of the game are defined as a different state of the game that can all be reached by one action.
+e.g. By moving forward, turning left or right, unlocking a door, chopping a tree - these are all actions that will each generate a neighbour node.
+A* will generate all these nodes in order to find a path to the goal state - and this goal state is different depending on which phase the agent is in.
+
+    2.1 RETRIEVE:
+    We assume that after the exploration phase, the agent will reveal enough of the map to know the location of the gold.
+    The goal state here is defined as a state of the game where the agent is holding the gold, on the position where the gold should be.
+
+    2.2 RETURN:
+    After the agent has successfully completed the retrieval of the gold, it will attempt to return to its initial position.
+    The goal state her eis defined as a state of the game where the agent is holding hte gold, on the position where it started the game.
+
+We split the agent up into different 'phases' in order to minimise the branching factor of the path-searching algorithms.
+We were worried that it may take too long or consume too much memory.
+Furthermore it naturally allowed for an intuitive approach to coding the agent, as we naturally found ourselves pursuing subgoals in the process of beating each map;
+such as grabbing a key if we knew we had a door to go through, or searching for pebbles if we needed to cross water.
+
+Unfortunately we did not have enough time to code logic in to interact with items successfully.
+"""
 
 
 import sys
@@ -32,33 +56,9 @@ from BFS import BFS
 from Node import Node
 mapRep = ExplorationMap()
 view = [['' for _ in range(5)] for _ in range(5)]
-pq = []
 game_state = State((0,0),(0,0),'N',0,0,0,0,False,mapRep)
 phase = 'EXPLORE'
 actions_to_send = []
-hasItem=False
-
-def get_action(view):
-    # bfs = BFS((0,0),(-2,-2),mapRep)
-    # route = bfs.run_bfs()
-    # if route == []:
-    #     print('NO ROUTE')
-    # else:
-    #     for step in route:
-    #         print(step)
-    #
-    # print(State.generateActions(game_state.direction, route))
-    while 1:
-        inp = input("Enter Action(s): ")
-        inp.strip()
-        final_string = ''
-        for char in inp:
-            if char in ['f','l','r','c','u','b','F','L','R','C','U','B']:
-                final_string += char
-                if final_string:
-                     return final_string[0]
-
-
 
 # helper function to print the grid
 def print_grid(view):
@@ -113,7 +113,6 @@ if __name__ == "__main__":
             # print_grid(view) # COMMENT THIS OUT ON SUBMISSION
             newView = State.transform_view(game_state, view)
             mapRep.update(game_state, newView)
-            # mapRep.print_map()
 
             while(len(actions_to_send) == 0 and phase == 'EXPLORE'):
                 nextCoord = mapRep.getBestCoord()
@@ -122,29 +121,11 @@ if __name__ == "__main__":
                     break
                 else:
                     bfs = BFS(game_state.current_position, nextCoord, mapRep)
-                    actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
-
-            # while(len(actions_to_send) == 0 and phase == 'RETRIEVE'):
-            #     goal = mapRep.getGoldCoord()
-            #
-            #     bfs = BFS(game_state.current_position, goal, mapRep)
-            #     actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
-            #     phase = 'RETURN'
-            #
-            # while(len(actions_to_send) == 0 and phase == 'RETURN'):
-            #
-            #     bfs = BFS(game_state.current_position, (0,0), mapRep)
-            #     actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
-
             while(len(actions_to_send) == 0 and phase == 'RETRIEVE'):
                 goal = game_state.generateGoldGoal()
 
                 astar = AStar.AStar()
                 route = astar.run_astar(game_state, goal)
-                #
-                # print('RETRIEVING GOLD')
-                # for state in route:
-                #     print(state.current_position)
                 actions_to_send = list(State.generateActionsAStar(route))
 
                 phase = 'RETURN'
@@ -154,11 +135,6 @@ if __name__ == "__main__":
 
                 astar = AStar.AStar()
                 route = astar.run_astar(game_state, goal)
-
-                # print('RETURNING GOLD')
-                # for state in route:
-                #     print(state.current_position)
-
                 actions_to_send = list(State.generateActionsAStar(route))
 
                 phase = 'FINISHED'
