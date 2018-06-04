@@ -174,3 +174,18 @@ class StateTest(unittest.TestCase):
         ]
         expected_actions = 'rrflfflfrf'
         self.assertEqual(State.generateActions('N', coords), expected_actions)
+
+    def testContains(self):
+        game_state1 = State((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+        game_state2 = State((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+
+        game_state1.mapRep = 'test1'
+        game_state2.mapRep = 'test2'
+
+        self.assertEqual(game_state1 == game_state2, True)
+
+        mySet = []
+        mySet.append(game_state1)
+
+        self.assertEqual(game_state1 in mySet, True)
+        self.assertEqual(game_state2 in mySet, True)

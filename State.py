@@ -11,10 +11,17 @@ class State(object):
         self.raft = raft
         self.axe = axe
         self.have_gold = have_gold
-        self.map_complete = map_complete
         self.map_representation = map_representation
-        self.g_cost = g_cost
-        self.h_cost = h_cost
+
+    def __eq__(self, other):
+        return(self.initial_position == other.initial_position and self.current_position == other.current_position
+               and self.direction == other.direction and self.key == other.key and self.stones == other.stones
+               and self.stepping_stones == other.stepping_stones and self.raft == other.raft and self.axe == other.axe
+               and self.have_gold == other.have_gold
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__
 
     def move_forward(self):
         next_position = None
@@ -56,11 +63,36 @@ class State(object):
         elif(action == 'r' or action == 'l'):
             self.change_dir(action)
 
+    def generateNeighbours(self):
+        neighbours = []
+        # f
+        neighbours.append(self.neighbourF())
+        # l
+        neighbours.append(self.neighbourL())
+        # r
+        neighbours.append(self.neighbourR())
+        return neighbours
+
+    def neighbourF(self):
+        newNode = self.create_from(self)
+        newNode.move_forward()
+        return newNode
+
+    def neighbourL(self):
+        newNode = self.create_from(self)
+        newNode.change_dir('l')
+        return newNode
+
+    def neighbourR(self):
+        newNode = self.create_from(self)
+        newNode.change_dir('r')
+        return newNode
+
     @staticmethod
     def create_from(node):
         new_node = State(node.initial_position, node.current_position, node.direction, node.key,
-                                 node.stepping_stones, node.raft, node.axe, node.have_gold, node.map_complete,
-                                 node.map_representation, node.g_cost, node.h_cost)
+                                 node.stepping_stones, node.raft, node.axe, node.have_gold,
+                                 node.map_representation)
 
         return new_node
 
