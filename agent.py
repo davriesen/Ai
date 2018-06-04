@@ -12,6 +12,7 @@ import sys
 import socket
 from pprint import pprint
 
+import AStar
 from ExplorationMap import ExplorationMap
 from State import  State
 # declaring visible grid to agent
@@ -112,17 +113,27 @@ if __name__ == "__main__":
                     bfs = BFS(game_state.current_position, nextCoord, mapRep)
                     actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
 
+            # while(len(actions_to_send) == 0 and phase == 'RETRIEVE'):
+            #     goal = mapRep.getGoldCoord()
+            #
+            #     bfs = BFS(game_state.current_position, goal, mapRep)
+            #     actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
+            #     phase = 'RETURN'
+            #
+            # while(len(actions_to_send) == 0 and phase == 'RETURN'):
+            #
+            #     bfs = BFS(game_state.current_position, (0,0), mapRep)
+            #     actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
+
             while(len(actions_to_send) == 0 and phase == 'RETRIEVE'):
-                goal = mapRep.getGoldCoord()
+                goal = game_state.generateGoldGoal()
 
-                bfs = BFS(game_state.current_position, goal, mapRep)
-                actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
-                phase = 'RETURN'
+                astar = AStar.AStar()
+                route = astar.run_astar(game_state, goal)
 
-            while(len(actions_to_send) == 0 and phase == 'RETURN'):
-
-                bfs = BFS(game_state.current_position, (0,0), mapRep)
-                actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
+                print('RETRIEVING GOLD')
+                for state in route:
+                    print(state.current_position)
 
 
             next_action = actions_to_send.pop(0)

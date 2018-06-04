@@ -23,6 +23,27 @@ class State(object):
     def __ne__(self, other):
         return not self.__eq__
 
+
+    def generateGoldGoal(self):
+        pos = self.map_representation.getGoldCoord()
+
+        goal_state = State(
+            self.initial_position,
+            pos,
+            self.direction,
+            key=0,
+            stepping_stones=0,
+            raft=0,
+            axe=0,
+            have_gold=True,
+            map_representation=None,
+            map_complete=0,
+            g_cost=0,
+            h_cost=0
+        )
+
+        return goal_state
+
     def move_forward(self):
         next_position = None
         if(self.direction == 'N'):
@@ -36,6 +57,9 @@ class State(object):
 
         if(not self.map_representation.isWall(next_position)):
             self.current_position = next_position
+
+            if(self.map_representation.get(next_position) == '$'):
+                self.have_gold = True
 
     def change_dir(self, turn_dir):
         if(turn_dir.lower() == 'l'):

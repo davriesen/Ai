@@ -77,7 +77,7 @@ class AStar(object):
     def reconstruct_path(self, current):
         path = []
         while(current):
-            path.append(current)
+            path.append(current.data)
             current = current.parent
 
         return reversed(path)
