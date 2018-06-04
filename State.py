@@ -1,5 +1,5 @@
 class State(object):
-    def __init__(self, initial_position,current_position,direction,key,stepping_stones,raft,axe,have_gold,map_complete,map_representation,g_cost,h_cost):
+    def __init__(self, initial_position,current_position,direction,key,stepping_stones,raft,axe,have_gold,map_representation,):
         # super(game_node, self).__init__()
         # self.arg = arg
         self.initial_position = initial_position
@@ -23,6 +23,21 @@ class State(object):
     def __ne__(self, other):
         return not self.__eq__
 
+    def generateEndGoal(self):
+
+        goal_state = State(
+            self.initial_position,
+            self.initial_position,
+            self.direction,
+            key=0,
+            stepping_stones=0,
+            raft=0,
+            axe=0,
+            have_gold=True,
+            map_representation=None
+        )
+
+        return goal_state
 
     def generateGoldGoal(self):
         pos = self.map_representation.getGoldCoord()
@@ -36,10 +51,7 @@ class State(object):
             raft=0,
             axe=0,
             have_gold=True,
-            map_representation=None,
-            map_complete=0,
-            g_cost=0,
-            h_cost=0
+            map_representation=None
         )
 
         return goal_state

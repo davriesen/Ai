@@ -22,7 +22,7 @@ from Node import Node
 mapRep = ExplorationMap()
 view = [['' for _ in range(5)] for _ in range(5)]
 pq = []
-game_state = State((0,0),(0,0),'N',0,0,0,0,False,False,mapRep,0,0)
+game_state = State((0,0),(0,0),'N',0,0,0,0,False,mapRep)
 phase = 'EXPLORE'
 actions_to_send = []
 hasItem=False
@@ -134,6 +134,20 @@ if __name__ == "__main__":
                 print('RETRIEVING GOLD')
                 for state in route:
                     print(state.current_position)
+
+                phase = 'RETURN'
+
+            while(len(actions_to_send) == 0 and phase == 'RETURN'):
+                goal = game_state.generateEndGoal()
+
+                astar = AStar.AStar()
+                route = astar.run_astar(game_state, goal)
+
+                print('RETURNING GOLD')
+                for state in route:
+                    print(state.current_position)
+
+                phase = 'FINISHED'
 
 
             next_action = actions_to_send.pop(0)
