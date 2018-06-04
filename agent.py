@@ -8,6 +8,17 @@
 # created by Leo Hoare
 # with slight modifications by Alan Blair
 
+# Briefly describe how your program works,
+# including any algorithms and data structures employed, and explain any design decisions you made along the way:
+# Our agent goes through stages to solve a map.
+#STAGE 1. EXPLORE:
+# The agent builds up its awareness of the world. The global map is an object MapRepresentation which is a dict havings keys(y,x) tuples , and values (' ','T','~','-','$','*)
+# The agent explores the map, visiting areas which will reveal previously hidden areas. The purpose of exploration is to dsicover as much of the world as possible inorder to identify locations of items,goals,and areas to avoid
+# BFS is used to generate a path to get the agent from its current location to a goal. Path's are a set of coordinates which are
+# converted into a series of actions via a function. Goals are generated via a function getBestCoord() which uses weights to prioritize locations that will reveal hidden spots.
+# BFS uses an open/visited queue(array) to keep track of which nodes to explore. Nodes are custom class contatining map coordinates, as well as a parent
+
+
 import sys
 import socket
 from pprint import pprint
