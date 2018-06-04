@@ -1,3 +1,5 @@
+# Class to hold relevant information for the state of the game
+# Everything we need to keep track of the agent and the world is kept in here
 class State(object):
     def __init__(self, initial_position,current_position,direction,key,stepping_stones,raft,axe,have_gold,map_representation,):
         # super(game_node, self).__init__()
@@ -13,6 +15,7 @@ class State(object):
         self.have_gold = have_gold
         self.map_representation = map_representation
 
+    # Map_representation is something we don't want to consider when comparing states of the game
     def __eq__(self, other):
         return(self.initial_position == other.initial_position and self.current_position == other.current_position
                and self.direction == other.direction and self.key == other.key and self.stones == other.stones
@@ -21,8 +24,9 @@ class State(object):
         )
 
     def __ne__(self, other):
-        return not self.__eq__
+        return not self.__eq__(other)
 
+    # Return with the gold to the initial position
     def generateEndGoal(self):
 
         goal_state = State(
@@ -38,9 +42,12 @@ class State(object):
         )
 
         return goal_state
-
+    # Given we know where the gold is, generate a goal state where the agent has the gold and it as the gold position
     def generateGoldGoal(self):
+
         pos = self.map_representation.getGoldCoord()
+        if pos == None:
+            return None
 
         goal_state = State(
             self.initial_position,
@@ -56,6 +63,7 @@ class State(object):
 
         return goal_state
 
+    # Update the game state to represent the action of 'moving forward'
     def move_forward(self):
         next_position = None
         if(self.direction == 'N'):
@@ -73,6 +81,7 @@ class State(object):
             if(self.map_representation.get(next_position) == '$'):
                 self.have_gold = True
 
+    # Update the game state to represent the action of turning 'l' or 'r'
     def change_dir(self, turn_dir):
         if(turn_dir.lower() == 'l'):
             if(self.direction == 'N'):
@@ -93,12 +102,15 @@ class State(object):
             elif(self.direction == 'E'):
                 self.direction = 'S'
 
+    # Function which updates the game state with respect to the incoming action
     def updateGameState(self, action):
         if(action == 'f'):
             self.move_forward()
         elif(action == 'r' or action == 'l'):
             self.change_dir(action)
 
+    # Function which generates 'neighbours', given the current game_state
+    # Neighbours are defined as a state of the game which is one action 'different' from the current game state
     def generateNeighbours(self):
         neighbours = []
         # f
@@ -109,21 +121,25 @@ class State(object):
         neighbours.append(self.neighbourR())
         return neighbours
 
+    # Neighbour for move forward
     def neighbourF(self):
         newNode = self.create_from(self)
         newNode.move_forward()
         return newNode
 
+    #Neighbour for move Left
     def neighbourL(self):
         newNode = self.create_from(self)
         newNode.change_dir('l')
         return newNode
 
+    # Neighbour for move right
     def neighbourR(self):
         newNode = self.create_from(self)
         newNode.change_dir('r')
         return newNode
 
+    # Helper function to 'copy' existing game states
     @staticmethod
     def create_from(node):
         new_node = State(node.initial_position, node.current_position, node.direction, node.key,
@@ -133,6 +149,7 @@ class State(object):
         return new_node
 
 
+    # Helper function used to transform the view into an object that does not rotate when the agent turns left or right
     @staticmethod
     def transform_view(node, view):
         newView = [[0 for x in range(5)] for y in range(5)]
@@ -170,6 +187,7 @@ class State(object):
 
         return newView
 
+    # Given a direction and a turn action, returns resulting new direction agent is facing
     @staticmethod
     def turn(cur_direction, action):
         final_direction = ''
@@ -194,6 +212,8 @@ class State(object):
 
         return final_direction
 
+    # Given a direction, position, and an orthogonally adjacent position,
+    # Generate series of actions for the agent to travel to the new position
     @staticmethod
     def generateAction(cur_direction, cur_coord, next_coord):
         cell_direction = ''
@@ -242,6 +262,10 @@ class State(object):
 
         return actions, cell_direction
 
+    # Given a direction, and a list of coordinates such that
+    # pairs of elements (coords_list[n], coords_list[n+1]) are orthogonally adjacent,
+    # generate a series of actions that will take the agent through all the coordinates in the list
+    # starting from coords_list[0], ending at the final element of coords_list
     @staticmethod
     def generateActions(cur_direction, coords_list):
         all_actions = ''

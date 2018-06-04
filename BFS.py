@@ -1,9 +1,6 @@
 
 
-#BFS
-#is there a place I can go to which will show more of map.. if yes go there else you finished exploring
-#floodfill- identifies all the squares that can be reached
-#build a map figure out which places in the map u can get to..
+# BFS Class specifically used for the initial exploration of the map
 from Node import Node
 class BFS(object):
     def __init__(self,start,goal,graph):

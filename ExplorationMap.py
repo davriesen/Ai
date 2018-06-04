@@ -1,5 +1,8 @@
 from MapRepresentation import MapRepresentation
 
+# Subclass of MapRepresentation
+# Used in the initial 'exploration' phase of the agent
+# This map helps the agent to prioritize areas of the map that have not been explored
 
 class ExplorationMap(MapRepresentation):
 
@@ -10,10 +13,12 @@ class ExplorationMap(MapRepresentation):
         self.invalid = {'*', '~', 'T', '_'}
         self.visited = []
 
+    # Updates the global map with respect to a state, and view
     def update(self, state, view):
         super().update(state, view)
         self.updateWeights(state.current_position)
 
+    # Function used to manage the prioritiy (weights) of each cell
     def updateWeights(self, cur_pos):
         boundary_radius = 3
         for i in range(cur_pos[0] - boundary_radius, cur_pos[0] + boundary_radius + 1):
@@ -24,6 +29,8 @@ class ExplorationMap(MapRepresentation):
                 except KeyError:
                     continue
 
+    # Update the weight for a single coordinate cell
+    # If going to this cell will not reveal new information (!isFoggy), don't even consider this cell
     def updateWeight(self, cur_cell):
         # Get coords of neighbours
         # boundary_radius = 1

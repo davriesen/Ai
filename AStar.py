@@ -2,7 +2,7 @@ import sys
 
 from heapq import heappush, heappop
 
-
+# AStar to solve maps
 class AStar(object):
 
     # class GScore(dict):
