@@ -102,7 +102,7 @@ if __name__ == "__main__":
             # print_grid(view) # COMMENT THIS OUT ON SUBMISSION
             newView = State.transform_view(game_state, view)
             mapRep.update(game_state, newView)
-            mapRep.print_map()
+            # mapRep.print_map()
 
             while(len(actions_to_send) == 0 and phase == 'EXPLORE'):
                 nextCoord = mapRep.getBestCoord()
@@ -130,8 +130,8 @@ if __name__ == "__main__":
 
                 astar = AStar.AStar()
                 route = astar.run_astar(game_state, goal)
-
-                print('RETRIEVING GOLD')
+                #
+                # print('RETRIEVING GOLD')
                 # for state in route:
                 #     print(state.current_position)
                 actions_to_send = list(State.generateActionsAStar(route))
@@ -144,7 +144,7 @@ if __name__ == "__main__":
                 astar = AStar.AStar()
                 route = astar.run_astar(game_state, goal)
 
-                print('RETURNING GOLD')
+                # print('RETURNING GOLD')
                 # for state in route:
                 #     print(state.current_position)
 
