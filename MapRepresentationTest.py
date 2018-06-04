@@ -1,11 +1,11 @@
 import unittest
 from MapRepresentation import MapRepresentation
-from GameNodeState import GameNodeState
+from State import State
 
 class MapRepresentationTest(unittest.TestCase):
     # Empty MapRep should be same as incoming view
     def testUpdate1(self):
-        game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+        game_state = State((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
 
         mapRep = MapRepresentation()
         view = [[' ' for _ in range(5)] for _ in range(5)]
@@ -26,7 +26,7 @@ class MapRepresentationTest(unittest.TestCase):
     # (0,0) North, move forward to (1,0)
     def testUpdate2(self):
         # At (0,0) North
-        game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
+        game_state = State((0,0),(0,0),'N',0,0,0,0,False,False,[[]],0,0)
 
         mapRep = MapRepresentation()
         view = [[' ' for _ in range(5)] for _ in range(5)]

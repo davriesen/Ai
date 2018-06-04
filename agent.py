@@ -13,7 +13,7 @@ import socket
 from pprint import pprint
 
 from ExplorationMap import ExplorationMap
-from GameNodeState import  GameNodeState
+from State import  State
 # declaring visible grid to agent
 from MapRepresentation import MapRepresentation
 from BFS import BFS
@@ -21,10 +21,10 @@ from Node import Node
 mapRep = ExplorationMap()
 view = [['' for _ in range(5)] for _ in range(5)]
 pq = []
-game_state = GameNodeState((0,0),(0,0),'N',0,0,0,0,False,False,mapRep,0,0)
+game_state = State((0,0),(0,0),'N',0,0,0,0,False,False,mapRep,0,0)
 phase = 'EXPLORE'
 actions_to_send = []
-
+hasItem=False
 
 def get_action(view):
     # bfs = BFS((0,0),(-2,-2),mapRep)
@@ -35,7 +35,7 @@ def get_action(view):
     #     for step in route:
     #         print(step)
     #
-    # print(GameNodeState.generateActions(game_state.direction, route))
+    # print(State.generateActions(game_state.direction, route))
     while 1:
         inp = input("Enter Action(s): ")
         inp.strip()
@@ -99,7 +99,7 @@ if __name__ == "__main__":
                 i=(i+1)%5
         if j==0 and i==0:
             # print_grid(view) # COMMENT THIS OUT ON SUBMISSION
-            newView = GameNodeState.transform_view(game_state, view)
+            newView = State.transform_view(game_state, view)
             mapRep.update(game_state, newView)
             mapRep.print_map()
 
@@ -110,19 +110,19 @@ if __name__ == "__main__":
                     break
                 else:
                     bfs = BFS(game_state.current_position, nextCoord, mapRep)
-                    actions_to_send = list(GameNodeState.generateActions(game_state.direction, bfs.run_bfs()))
+                    actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
 
             while(len(actions_to_send) == 0 and phase == 'RETRIEVE'):
                 goal = mapRep.getGoldCoord()
 
                 bfs = BFS(game_state.current_position, goal, mapRep)
-                actions_to_send = list(GameNodeState.generateActions(game_state.direction, bfs.run_bfs()))
+                actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
                 phase = 'RETURN'
 
             while(len(actions_to_send) == 0 and phase == 'RETURN'):
 
                 bfs = BFS(game_state.current_position, (0,0), mapRep)
-                actions_to_send = list(GameNodeState.generateActions(game_state.direction, bfs.run_bfs()))
+                actions_to_send = list(State.generateActions(game_state.direction, bfs.run_bfs()))
 
 
             next_action = actions_to_send.pop(0)

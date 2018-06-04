@@ -1,4 +1,4 @@
-class GameNodeState(object):
+class State(object):
     def __init__(self, initial_position,current_position,direction,key,stepping_stones,raft,axe,have_gold,map_complete,map_representation,g_cost,h_cost):
         # super(game_node, self).__init__()
         # self.arg = arg
@@ -6,7 +6,8 @@ class GameNodeState(object):
         self.current_position = current_position
         self.direction = direction
         self.key = key
-        self.stepping_stones = stepping_stones
+        self.stones = stepping_stones
+        self.stepping_stones = self.stones
         self.raft = raft
         self.axe = axe
         self.have_gold = have_gold
@@ -57,7 +58,7 @@ class GameNodeState(object):
 
     @staticmethod
     def create_from(node):
-        new_node = GameNodeState(node.initial_position, node.current_position, node.direction, node.key,
+        new_node = State(node.initial_position, node.current_position, node.direction, node.key,
                                  node.stepping_stones, node.raft, node.axe, node.have_gold, node.map_complete,
                                  node.map_representation, node.g_cost, node.h_cost)
 
@@ -183,7 +184,7 @@ class GameNodeState(object):
             for coord in coords_list:
 
                 next = coord
-                actions, direction = GameNodeState.generateAction(direction, cur, next)
+                actions, direction = State.generateAction(direction, cur, next)
                 all_actions+=actions
                 cur = next
             return all_actions
